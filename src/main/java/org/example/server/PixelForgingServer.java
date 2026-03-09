@@ -11,7 +11,7 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class GreetingServer {
+public class PixelForgingServer {
     public static final int PORT = 8080;
     public static final int POOL_SIZE  = 10;
 
