@@ -1,0 +1,24 @@
+mar. 17, 2026 3:34:47 PM org.example.client.PaletteClient main
+INFO: Starting PaletteClient
+mar. 17, 2026 3:34:47 PM org.example.client.PaletteClient main
+INFO: Read input.png bytes: 42462
+mar. 17, 2026 3:34:47 PM org.example.client.PaletteClient main
+INFO: Sending POST to http://localhost:8080/extract-palette
+mar. 17, 2026 3:34:48 PM org.example.client.PaletteClient main
+INFO: Response status: 200
+mar. 17, 2026 3:34:48 PM org.example.client.PaletteClient main
+INFO: Response Content-Type: text/plain
+mar. 17, 2026 3:34:48 PM org.example.client.PaletteClient main
+WARNING: Non-image response body: Extract The Palette!
+mar. 18, 2026 6:31:57 PM org.example.client.PaletteClient main
+INFO: Starting PaletteClient
+mar. 18, 2026 6:31:57 PM org.example.client.PaletteClient main
+INFO: Read input.png bytes: 42462
+mar. 18, 2026 6:31:57 PM org.example.client.PaletteClient main
+INFO: Sending POST to http://localhost:8080/extract-palette
+mar. 18, 2026 6:31:57 PM org.example.client.PaletteClient main
+INFO: Response status: 200
+mar. 18, 2026 6:31:57 PM org.example.client.PaletteClient main
+INFO: Response Content-Type: image/png
+mar. 18, 2026 6:31:57 PM org.example.client.PaletteClient main
+INFO: Saved response image to C:\Users\jlmac\OneDrive\Documentos\ProjetoLP2\palette-from-server.png
