@@ -1,0 +1,114 @@
+<main class="min-h-screen bg-[radial-gradient(circle_at_top,rgba(126,211,243,0.22),transparent_34%),linear-gradient(180deg,#080b12_0%,#0d1421_48%,#05070c_100%)] text-slate-100">
+  <div class="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 py-8 sm:px-6 lg:px-8">
+    <section class="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+      <div class="space-y-6">
+        <div class="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-sky-100 shadow-[0_0_40px_rgba(126,211,243,0.08)] backdrop-blur">
+          <span class="h-2.5 w-2.5 rounded-full bg-forge-sky shadow-[0_0_14px_rgba(126,211,243,0.9)]"></span>
+          pixelforging
+        </div>
+
+        <div class="space-y-4">
+          <h1 class="max-w-3xl text-4xl font-black uppercase tracking-[0.08em] text-white sm:text-5xl lg:text-6xl">
+            Forje paletas direto da sua imagem
+          </h1>
+          <p class="max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
+            Cliente Angular com Tailwind para enviar imagens ao servidor Java, visualizar o upload
+            original e receber a paleta gerada no endpoint <span class="font-semibold text-forge-sky">/extract-palette</span>.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-4 text-sm text-slate-300">
+          <div class="rounded-full border border-white/10 bg-white/5 px-4 py-2">Tema escuro</div>
+          <div class="rounded-full border border-white/10 bg-white/5 px-4 py-2">Drag and drop</div>
+          <div class="rounded-full border border-white/10 bg-white/5 px-4 py-2">PNG e JPEG</div>
+        </div>
+      </div>
+
+      <div class="relative isolate mx-auto w-full max-w-md">
+        <div class="absolute inset-0 rounded-4xl bg-forge-sky/15 blur-3xl"></div>
+        <div class="relative overflow-hidden rounded-4xl border border-white/10 bg-slate-950/70 p-6 shadow-[0_30px_120px_rgba(0,0,0,0.55)] backdrop-blur-xl">
+          <div class="absolute right-0 top-0 h-28 w-28 rounded-full bg-forge-blue/25 blur-2xl"></div>
+          <img src="/project-logo.png" alt="Logo do projeto PixelForging" class="relative z-10 mx-auto w-full max-w-xs drop-shadow-[0_0_36px_rgba(126,211,243,0.3)]">
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-10 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+      <div class="rounded-4xl border border-white/10 bg-slate-950/60 p-5 shadow-[0_24px_90px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-6">
+        <div
+          class="group rounded-3xl border border-dashed p-6 transition duration-300"
+          [ngClass]="isDragging
+            ? 'border-forge-sky bg-forge-sky/10 shadow-[0_0_0_1px_rgba(126,211,243,0.45),0_0_45px_rgba(126,211,243,0.12)]'
+            : 'border-white/15 bg-white/5'"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)"
+        >
+          <input id="image-input" class="hidden" type="file" accept="image/png,image/jpeg" (change)="onFileSelected($event)">
+
+          <div class="flex flex-col items-center gap-5 py-8 text-center">
+            <div class="grid h-20 w-20 place-items-center rounded-3xl bg-forge-steel/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+              <div class="h-10 w-10 rounded-2xl border border-forge-sky/40 bg-forge-sky/20"></div>
+            </div>
+
+            <div class="space-y-2">
+              <h2 class="text-2xl font-bold text-white">Área de forja</h2>
+              <p class="max-w-xl text-sm leading-6 text-slate-300 sm:text-base">
+                Arraste sua imagem para esta área ou use o botão abaixo. O tema usa os tons da logo do
+                projeto: azul gelo, aço azulado e grafite.
+              </p>
+            </div>
+
+            <label for="image-input" class="inline-flex cursor-pointer items-center rounded-full bg-forge-sky px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-forge-ice">
+              Selecionar imagem
+            </label>
+
+            <button
+              class="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:border-forge-sky/40 hover:bg-forge-sky/10 disabled:cursor-not-allowed disabled:opacity-50"
+              type="button"
+              (click)="extractPalette()"
+              [disabled]="!selectedFile || isLoading"
+            >
+              {{ isLoading ? 'Processando forja...' : 'Gerar paleta' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="mt-5 space-y-2 rounded-3xl border border-white/10 bg-black/20 p-4">
+          <p class="text-sm text-slate-300">{{ statusMessage }}</p>
+          <p *ngIf="errorMessage" class="text-sm font-medium text-rose-300">{{ errorMessage }}</p>
+        </div>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
+        <article class="rounded-4xl border border-white/10 bg-slate-950/60 p-5 shadow-[0_24px_90px_rgba(0,0,0,0.45)] backdrop-blur-xl">
+          <div class="mb-4 flex items-center justify-between gap-3">
+            <h2 class="text-lg font-bold text-white">Entrada</h2>
+            <span class="rounded-full bg-forge-steel/40 px-3 py-1 text-xs uppercase tracking-[0.2em] text-slate-300">original</span>
+          </div>
+
+          <div class="grid min-h-80 place-items-center overflow-hidden rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(24,30,44,0.92),rgba(10,14,22,0.96))] p-4">
+            <img *ngIf="originalImageUrl; else originalPlaceholder" [src]="originalImageUrl" alt="Preview da imagem selecionada" class="max-h-90 w-auto max-w-full object-contain">
+            <ng-template #originalPlaceholder>
+              <p class="text-sm text-slate-500">Aguardando selecao de arquivo.</p>
+            </ng-template>
+          </div>
+        </article>
+
+        <article class="rounded-4xl border border-white/10 bg-slate-950/60 p-5 shadow-[0_24px_90px_rgba(0,0,0,0.45)] backdrop-blur-xl">
+          <div class="mb-4 flex items-center justify-between gap-3">
+            <h2 class="text-lg font-bold text-white">Saída</h2>
+            <span class="rounded-full bg-forge-sky/15 px-3 py-1 text-xs uppercase tracking-[0.2em] text-forge-ice">palette</span>
+          </div>
+
+          <div class="grid min-h-80 place-items-center overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(180deg,rgba(24,30,44,0.92),rgba(10,14,22,0.96))] p-4">
+            <img *ngIf="paletteImageUrl; else palettePlaceholder" [src]="paletteImageUrl" alt="Paleta retornada pelo servidor" class="max-h-90 w-auto max-w-full object-contain">
+            <ng-template #palettePlaceholder>
+              <p class="text-sm text-slate-500">A paleta aparecera aqui apos o processamento.</p>
+            </ng-template>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+</main>

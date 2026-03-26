@@ -33,6 +33,13 @@ class ClientHandler implements  Runnable
             for (String header: x ){
                 IO.println(header + " - " + request.headers.get(header));
             }
+
+            if ("OPTIONS".equalsIgnoreCase(request.method)) {
+                sendPreflightResponse(rawOut, request.path);
+                socket.close();
+                return;
+            }
+
             // Faz o Roteamento para o Runnable especifico.
             Runnable endpoint = switch (request.path) {
                 case "/" -> new HomeHandler(out);
@@ -147,6 +154,20 @@ class ClientHandler implements  Runnable
                         body;
         out.write(response);
         out.flush();
+    }
+
+    private static void sendPreflightResponse(OutputStream rawOut, String path) throws IOException {
+        String allowedMethods = "/extract-palette".equals(path) ? "POST, OPTIONS" : "GET, OPTIONS";
+        String response =
+                "HTTP/1.1 204 No Content\r\n" +
+                        "Access-Control-Allow-Origin: *\r\n" +
+                        "Access-Control-Allow-Methods: " + allowedMethods + "\r\n" +
+                        "Access-Control-Allow-Headers: Content-Type\r\n" +
+                        "Access-Control-Max-Age: 86400\r\n" +
+                        "Content-Length: 0\r\n" +
+                        "\r\n";
+        rawOut.write(response.getBytes(StandardCharsets.UTF_8));
+        rawOut.flush();
     }
 }
 

@@ -19,6 +19,11 @@ public class ExtractPaletteHandler implements Runnable {
     @Override
     public void run() {
         try {
+            if (!"POST".equalsIgnoreCase(request.method)) {
+                sendTextResponse(405, "Method Not Allowed: use POST /extract-palette");
+                return;
+            }
+
             if (request.body == null || request.body.length == 0) {
                 sendTextResponse(400, "Bad Request: No image data provided");
                 return;
@@ -38,6 +43,7 @@ public class ExtractPaletteHandler implements Runnable {
 
             String headers =
                     "HTTP/1.1 200 OK\r\n" +
+                            "Access-Control-Allow-Origin: *\r\n" +
                             "Content-Type: image/png\r\n" +
                             "Content-Length: " + paletteBytes.length + "\r\n" +
                             "\r\n";
@@ -56,6 +62,7 @@ public class ExtractPaletteHandler implements Runnable {
         try {
             String response =
                     "HTTP/1.1 " + status + " " + getStatusText(status) + "\r\n" +
+                            "Access-Control-Allow-Origin: *\r\n" +
                             "Content-Type: text/plain\r\n" +
                             "Content-Length: " + body.length() + "\r\n" +
                             "\r\n" +

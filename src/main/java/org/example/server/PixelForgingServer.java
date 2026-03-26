@@ -23,7 +23,7 @@ public class PixelForgingServer {
                 threadPool.execute(new ClientHandler(clientSocket));
             }
 
-        }catch (IOException _) { IO.println("Fail While Trying to Start the Server!"); }
+        }catch (IOException _Exception) { IO.println("Fail While Trying to Start the Server!"); }
 
     }
 }
